@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deliverminds – Weather-Based Crop Insurance</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --red: #c0271a;
+        --red-dark: #8b1a10;
+        --red-light: #e8432e;
+        --orange: #e8621a;
+        --cream: #faf6f0;
+        --dark: #1a0e0a;
+        --mid: #3d2318;
+        --text: #2c1810;
+        --gray: #f5f0eb;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--cream);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 100;
+        background: rgba(250, 246, 240, 0.95);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(192, 39, 26, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 5%;
+        height: 68px;
+      }
+      .nav-logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: var(--red);
+        letter-spacing: -0.02em;
+      }
+      .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--mid);
+        font-size: 0.875rem;
+        font-weight: 500;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--red);
+      }
+      .nav-cta {
+        background: var(--red);
+        color: #fff !important;
+        padding: 0.5rem 1.25rem;
+        border-radius: 4px;
+        transition: background 0.2s !important;
+      }
+      .nav-cta:hover {
+        background: var(--red-dark) !important;
+        color: #fff !important;
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        background: var(--dark);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        padding: 100px 5% 60px;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 60% 70% at 70% 50%,
+          rgba(192, 39, 26, 0.25) 0%,
+          transparent 70%
+        );
+      }
+      .hex-bg {
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='30,2 58,17 58,53 30,68 2,53 2,17' fill='none' stroke='rgba(192,39,26,0.1)' stroke-width='1'/%3E%3C/svg%3E");
+        background-size: 60px 70px;
+        opacity: 0.6;
+      }
+      .hero-text {
+        position: relative;
+        z-index: 2;
+      }
+      .hero-eyebrow {
+        display: inline-block;
+        background: rgba(192, 39, 26, 0.2);
+        border: 1px solid rgba(192, 39, 26, 0.4);
+        color: #e8a090;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.4rem 1rem;
+        border-radius: 2px;
+        margin-bottom: 1.5rem;
+        animation: fadeUp 0.8s ease both;
+      }
+      .hero h1 {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.8rem, 5vw, 4.5rem);
+        font-weight: 900;
+        line-height: 1.05;
+        color: #fff;
+        animation: fadeUp 0.8s 0.1s ease both;
+      }
+      .hero h1 span {
+        color: var(--red-light);
+        display: block;
+      }
+      .hero-desc {
+        margin: 1.5rem 0 2.5rem;
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 1.05rem;
+        line-height: 1.7;
+        max-width: 500px;
+        animation: fadeUp 0.8s 0.2s ease both;
+      }
+      .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        animation: fadeUp 0.8s 0.3s ease both;
+      }
+      .btn-primary {
+        background: var(--red);
+        color: #fff;
+        padding: 0.875rem 2rem;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-primary:hover {
+        background: var(--red-light);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(192, 39, 26, 0.4);
+      }
+      .btn-outline {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.8);
+        padding: 0.875rem 2rem;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .btn-outline:hover {
+        border-color: #fff;
+        color: #fff;
+      }
+
+      .hero-visual {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: fadeLeft 0.9s 0.2s ease both;
+      }
+      .hero-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        padding: 2rem;
+        backdrop-filter: blur(12px);
+        max-width: 340px;
+        width: 100%;
+      }
+      .stat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      .stat-item {
+        background: rgba(192, 39, 26, 0.15);
+        border: 1px solid rgba(192, 39, 26, 0.25);
+        border-radius: 8px;
+        padding: 1.2rem 1rem;
+      }
+      .stat-num {
+        font-family: "Playfair Display", serif;
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: #fff;
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.55);
+        margin-top: 0.3rem;
+        line-height: 1.3;
+      }
+      .hero-badge {
+        margin-top: 1rem;
+        background: var(--red);
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+      }
+      .hero-badge-text {
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      .hero-badge-sub {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.75rem;
+      }
+
+      /* SECTIONS */
+      section {
+        padding: 100px 5%;
+      }
+      .section-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--red);
+        margin-bottom: 0.75rem;
+      }
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2rem, 3.5vw, 3rem);
+        font-weight: 900;
+        line-height: 1.1;
+        color: var(--dark);
+      }
+      .section-sub {
+        margin-top: 0.75rem;
+        color: #6b4a3a;
+        font-size: 1rem;
+        line-height: 1.7;
+        max-width: 540px;
+      }
+
+      /* PROBLEM */
+      .problem {
+        background: var(--gray);
+      }
+      .problem-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin-top: 3rem;
+        align-items: start;
+      }
+      .problem-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 2rem;
+        border-left: 4px solid var(--red);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .problem-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+      .problem-card h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--red);
+        margin-bottom: 0.75rem;
+      }
+      .problem-card p {
+        color: #5a3a28;
+        font-size: 0.95rem;
+        line-height: 1.7;
+      }
+      .root-causes {
+        background: var(--dark);
+        border-radius: 12px;
+        padding: 2rem;
+        color: #fff;
+      }
+      .root-causes h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.15rem;
+        margin-bottom: 1.25rem;
+        color: var(--red-light);
+      }
+      .cause-item {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .cause-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .cause-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--red-light);
+        flex-shrink: 0;
+        margin-top: 6px;
+      }
+      .cause-item p {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      /* SOLUTION */
+      .solution-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+        margin-top: 3.5rem;
+      }
+      .sol-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+        transition: all 0.25s;
+      }
+      .sol-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--red);
+      }
+      .sol-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+      }
+      .sol-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        background: rgba(192, 39, 26, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.25rem;
+      }
+      .sol-card h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 0.75rem;
+      }
+      .sol-card p {
+        color: #6b4a3a;
+        font-size: 0.9rem;
+        line-height: 1.65;
+      }
+      .tech-stack {
+        margin-top: 3rem;
+        background: var(--dark);
+        border-radius: 16px;
+        padding: 2.5rem;
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .tech-stack h3 {
+        font-family: "Playfair Display", serif;
+        color: #fff;
+        font-size: 1rem;
+        flex-shrink: 0;
+        margin-right: 0.5rem;
+      }
+      .tech-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+      }
+      .tech-tag {
+        background: rgba(192, 39, 26, 0.2);
+        border: 1px solid rgba(192, 39, 26, 0.35);
+        color: #e8a090;
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 0.35rem 0.85rem;
+        border-radius: 20px;
+      }
+
+      /* MARKET */
+      .market {
+        background: var(--gray);
+      }
+      .market-flex {
+        display: flex;
+        gap: 4rem;
+        margin-top: 3rem;
+        align-items: center;
+      }
+      .market-circles {
+        flex-shrink: 0;
+        position: relative;
+        width: 260px;
+        height: 260px;
+      }
+      .circle {
+        position: absolute;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+      }
+      .circle-tam {
+        width: 260px;
+        height: 260px;
+        top: 0;
+        left: 0;
+        background: var(--red-dark);
+      }
+      .circle-sam {
+        width: 185px;
+        height: 185px;
+        top: 37px;
+        left: 37px;
+        background: var(--orange);
+      }
+      .circle-som {
+        width: 110px;
+        height: 110px;
+        top: 75px;
+        left: 75px;
+        background: #e8a030;
+      }
+      .circle-label {
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #fff;
+      }
+      .circle-val {
+        font-family: "Playfair Display", serif;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .market-info {
+        flex: 1;
+      }
+      .market-row {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(192, 39, 26, 0.12);
+      }
+      .market-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      .market-row-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--red);
+        width: 50px;
+        flex-shrink: 0;
+        padding-top: 4px;
+      }
+      .market-row-content h4 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: var(--dark);
+      }
+      .market-row-content p {
+        color: #6b4a3a;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+      }
+
+      /* FINANCIALS */
+      .fin-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .fin-card {
+        border-radius: 12px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .fin-year {
+        background: var(--dark);
+      }
+      .fin-year h3 {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 1.5rem;
+      }
+      .fin-year .fin-label {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.8rem;
+        margin-bottom: 0.25rem;
+      }
+      .fin-year .fin-val {
+        font-family: "Playfair Display", serif;
+        font-size: 1.7rem;
+        font-weight: 900;
+        color: #fff;
+        margin-bottom: 1.2rem;
+      }
+      .fin-year .fin-val.loss {
+        color: #ff7b6b;
+      }
+      .fin-year .fin-val.profit {
+        color: #6ee7b7;
+      }
+
+      .fin-break {
+        background: var(--red);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      .fin-break h3 {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+      }
+      .fin-break .big-num {
+        font-family: "Playfair Display", serif;
+        font-size: 4rem;
+        font-weight: 900;
+        color: #fff;
+        line-height: 1;
+      }
+      .fin-break p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+      }
+
+      /* TEAM */
+      .team {
+        background: var(--gray);
+      }
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+      .team-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+        transition: all 0.25s;
+      }
+      .team-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+      }
+      .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--red);
+        margin: 0 auto 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Playfair Display", serif;
+        font-size: 2rem;
+        font-weight: 900;
+        color: #fff;
+      }
+      .team-card h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.15rem;
+        color: var(--dark);
+        margin-bottom: 0.25rem;
+      }
+      .team-role {
+        font-size: 0.8rem;
+        color: var(--red);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.75rem;
+      }
+      .team-skill {
+        display: inline-block;
+        background: rgba(192, 39, 26, 0.08);
+        border: 1px solid rgba(192, 39, 26, 0.2);
+        color: var(--red);
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+      }
+
+      /* ROADMAP */
+      .roadmap-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        margin-top: 3.5rem;
+        position: relative;
+      }
+      .roadmap-grid::before {
+        content: "";
+        position: absolute;
+        top: 30px;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background: linear-gradient(90deg, var(--red), var(--orange));
+        z-index: 0;
+      }
+      .roadmap-item {
+        text-align: center;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 1;
+      }
+      .roadmap-dot {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin: 0 auto 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Playfair Display", serif;
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: #fff;
+      }
+      .dot-1 {
+        background: var(--red-dark);
+      }
+      .dot-2 {
+        background: var(--red);
+      }
+      .dot-3 {
+        background: var(--orange);
+      }
+      .dot-4 {
+        background: #c07d20;
+      }
+      .roadmap-period {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--red);
+        margin-bottom: 0.5rem;
+      }
+      .roadmap-item h3 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+      }
+      .roadmap-item p {
+        font-size: 0.82rem;
+        color: #6b4a3a;
+        line-height: 1.5;
+      }
+      .roadmap-budget {
+        margin-top: 0.75rem;
+        display: inline-block;
+        background: rgba(192, 39, 26, 0.1);
+        border: 1px solid rgba(192, 39, 26, 0.2);
+        color: var(--red);
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 0.25rem 0.7rem;
+        border-radius: 4px;
+      }
+
+      /* CONTACT */
+      .contact {
+        background: var(--dark);
+        color: #fff;
+        text-align: center;
+      }
+      .contact .section-title {
+        color: #fff;
+      }
+      .contact .section-sub {
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0 auto;
+      }
+      .contact-form {
+        max-width: 480px;
+        margin: 3rem auto 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .contact-form input,
+      .contact-form textarea {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        padding: 0.875rem 1.25rem;
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s;
+        width: 100%;
+      }
+      .contact-form input::placeholder,
+      .contact-form textarea::placeholder {
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .contact-form input:focus,
+      .contact-form textarea:focus {
+        border-color: rgba(192, 39, 26, 0.6);
+      }
+      .contact-form textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+      .contact-form button {
+        background: var(--red);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .contact-form button:hover {
+        background: var(--red-light);
+        transform: translateY(-2px);
+      }
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: #1f7a4d;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.3s;
+        z-index: 200;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* FOOTER */
+      footer {
+        background: #0d0705;
+        color: rgba(255, 255, 255, 0.4);
+        text-align: center;
+        padding: 2rem;
+        font-size: 0.82rem;
+      }
+      footer span {
+        color: var(--red);
+      }
+
+      /* VIABILITY BADGE */
+      .viability-banner {
+        background: linear-gradient(135deg, var(--red-dark), var(--red));
+        padding: 3rem 5%;
+        text-align: center;
+      }
+      .viability-banner h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .viability-score {
+        font-family: "Playfair Display", serif;
+        font-size: 5rem;
+        font-weight: 900;
+        color: #fff;
+        line-height: 1;
+        margin-bottom: 0.75rem;
+      }
+      .viability-banner p {
+        color: rgba(255, 255, 255, 0.65);
+        max-width: 600px;
+        margin: 0 auto;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      /* ANIMATIONS */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeLeft {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* MOBILE */
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding-top: 90px;
+        }
+        .hero-visual {
+          display: none;
+        }
+        .problem-grid {
+          grid-template-columns: 1fr;
+        }
+        .solution-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .market-flex {
+          flex-direction: column;
+        }
+        .fin-grid {
+          grid-template-columns: 1fr;
+        }
+        .team-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .roadmap-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .roadmap-grid::before {
+          display: none;
+        }
+        .nav-links {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="nav-logo">Deliverminds</div>
+      <ul class="nav-links">
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#solution">Solution</a></li>
+        <li><a href="#market">Market</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="hex-bg"></div>
+      <div class="hero-text">
+        <div class="hero-eyebrow">Agri-Tech · Crop Insurance · India</div>
+        <h1>Weather-Smart <span>Crop Insurance</span> for India's Farmers</h1>
+        <p class="hero-desc">
+          Deliverminds automatically releases insurance payouts when extreme
+          weather strikes — no paperwork, no delays, no middlemen. Protecting
+          small and marginal farmers across rural India.
+        </p>
+        <div class="hero-buttons">
+          <a href="#solution" class="btn-primary">See How It Works</a>
+          <a href="#contact" class="btn-outline">Partner With Us</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="stat-grid">
+            <div class="stat-item">
+              <div class="stat-num">78Cr</div>
+              <div class="stat-label">
+                Insurance applications registered (9 years)
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">22Cr</div>
+              <div class="stat-label">Farmers enrolled in crop insurance</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">$20B+</div>
+              <div class="stat-label">Indian crop insurance market</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">91%</div>
+              <div class="stat-label">Venture viability index score</div>
+            </div>
+          </div>
+          <div class="hero-badge">
+            <div class="hero-badge-text">
+              🌾 RGUKT RK Valley · Wadhwani Foundation
+            </div>
+            <div class="hero-badge-sub">Venture Viability Analysis 2025</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="problem" id="problem">
+      <div class="section-label">The Problem</div>
+      <div class="section-title">
+        Farmers Are Left Behind<br />When Crops Fail
+      </div>
+      <p class="section-sub">
+        Small farmers in India face financial instability from crop losses due
+        to unpredictable weather, pests, and disasters — with little recourse.
+      </p>
+      <div class="problem-grid reveal">
+        <div>
+          <div class="problem-card" style="margin-bottom: 1.5rem">
+            <h3>The Core Problem</h3>
+            <p>
+              Indian small farmers face financial instability from crop losses,
+              with limited access to insurance and slow, complex claim processes
+              that delay urgently needed compensation.
+            </p>
+          </div>
+          <div class="problem-card">
+            <h3>The Impact</h3>
+            <p>
+              Farmers fall into debt and income loss, households struggle
+              financially, rural economies weaken, and insurers face low
+              participation and inefficient claims — a systemic failure.
+            </p>
+          </div>
+        </div>
+        <div class="root-causes">
+          <h3>Root Causes</h3>
+          <div class="cause-item">
+            <div class="cause-dot"></div>
+            <p>
+              Limited awareness among farmers about available crop insurance
+              schemes and their eligibility
+            </p>
+          </div>
+          <div class="cause-item">
+            <div class="cause-dot"></div>
+            <p>
+              Complex procedures and documentation requirements make filing
+              claims inaccessible
+            </p>
+          </div>
+          <div class="cause-item">
+            <div class="cause-dot"></div>
+            <p>
+              Inadequate access to risk-management mechanisms in rural areas
+            </p>
+          </div>
+          <div class="cause-item">
+            <div class="cause-dot"></div>
+            <p>
+              Unpredictable climate, pests, and natural disasters causing
+              frequent, severe crop failures
+            </p>
+          </div>
+          <div class="cause-item">
+            <div class="cause-dot"></div>
+            <p>
+              Informal loans from moneylenders increase debt cycles when farmers
+              seek alternatives
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOLUTION -->
+    <section id="solution" style="background: #fff">
+      <div class="section-label">Our Solution</div>
+      <div class="section-title">
+        Automatic. Transparent.<br />Farmer-First.
+      </div>
+      <p class="section-sub">
+        A weather-triggered system that automatically releases insurance payouts
+        to farmers when extreme weather events cause crop damage.
+      </p>
+
+      <div class="solution-grid reveal">
+        <div class="sol-card">
+          <div class="sol-icon">🌦️</div>
+          <h3>Weather-Triggered Payouts</h3>
+          <p>
+            When extreme weather is detected via real-time APIs and satellite
+            data, insurance compensation is automatically released — no manual
+            claim filing needed.
+          </p>
+        </div>
+        <div class="sol-card">
+          <div class="sol-icon">📱</div>
+          <h3>Simple Mobile App</h3>
+          <p>
+            Farmer registration, policy tracking, claim status, and payout
+            notifications all in one app. Multilingual support and minimal
+            documentation required.
+          </p>
+        </div>
+        <div class="sol-card">
+          <div class="sol-icon">🔍</div>
+          <h3>Transparent Tracking</h3>
+          <p>
+            Real-time claim status updates, transparent payout progress, and
+            SMS/WhatsApp notifications keep farmers informed at every step.
+          </p>
+        </div>
+        <div class="sol-card">
+          <div class="sol-icon">🤝</div>
+          <h3>No Middlemen</h3>
+          <p>
+            Verified weather data eliminates the need for intermediaries,
+            reducing delays, paperwork, and dependency on agents for small and
+            marginal farmers.
+          </p>
+        </div>
+        <div class="sol-card">
+          <div class="sol-icon">🌐</div>
+          <h3>Multilingual Support</h3>
+          <p>
+            Built for rural India with local dialect support, simple language,
+            and an interface designed for low digital literacy users.
+          </p>
+        </div>
+        <div class="sol-card">
+          <div class="sol-icon">📊</div>
+          <h3>Satellite Intelligence</h3>
+          <p>
+            Satellite imagery combined with weather APIs ensures objective,
+            data-driven crop loss assessment that is fair and hard to dispute.
+          </p>
+        </div>
+      </div>
+
+      <div class="tech-stack reveal">
+        <h3>Core Technologies</h3>
+        <div class="tech-tags">
+          <span class="tech-tag">Weather Data APIs</span>
+          <span class="tech-tag">Satellite Imagery</span>
+          <span class="tech-tag">Cloud Computing</span>
+          <span class="tech-tag">Automated Payout Algorithms</span>
+          <span class="tech-tag">Mobile Platform</span>
+          <span class="tech-tag">IoT Sensors</span>
+          <span class="tech-tag">Data Analytics</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARKET -->
+    <section class="market" id="market">
+      <div class="section-label">Market Opportunity</div>
+      <div class="section-title">A $20B+ Market<br />Waiting to be Served</div>
+      <div class="market-flex reveal">
+        <div class="market-circles">
+          <div class="circle circle-tam">
+            <span class="circle-label">TAM</span>
+            <span class="circle-val">$20B+</span>
+          </div>
+          <div class="circle circle-sam">
+            <span class="circle-label">SAM</span>
+            <span class="circle-val">$6B</span>
+          </div>
+          <div class="circle circle-som">
+            <span class="circle-label">SOM</span>
+            <span class="circle-val">₹5Cr</span>
+          </div>
+        </div>
+        <div class="market-info">
+          <div class="market-row">
+            <div class="market-row-label">TAM</div>
+            <div class="market-row-content">
+              <h4>$20B+</h4>
+              <p>
+                Total Indian crop insurance market — growing at 6–7% CAGR
+                globally (Source: FAO Reports, World Bank Data)
+              </p>
+            </div>
+          </div>
+          <div class="market-row">
+            <div class="market-row-label">SAM</div>
+            <div class="market-row-content">
+              <h4>$6B</h4>
+              <p>
+                Small farmer segment in rural India with smartphone access,
+                eligible for crop insurance in high-risk climate-prone states
+              </p>
+            </div>
+          </div>
+          <div class="market-row">
+            <div class="market-row-label">SOM</div>
+            <div class="market-row-content">
+              <h4>₹5 Crore</h4>
+              <p>
+                Realistic obtainable market within first 2 years, starting from
+                Andhra Pradesh & Telangana
+              </p>
+            </div>
+          </div>
+          <div class="market-row">
+            <div class="market-row-label">GTM</div>
+            <div class="market-row-content">
+              <h4>Andhra Pradesh & Telangana First</h4>
+              <p>
+                High-risk agricultural districts with large populations of
+                small/marginal farmers. Expand via cooperatives, FPOs, local
+                NGOs & agri-extension workers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINANCIALS -->
+    <section id="financials" style="background: #fff">
+      <div class="section-label">Financials</div>
+      <div class="section-title">Path to Profitability</div>
+      <p class="section-sub">
+        Subscription + Commission model targeting 500 policies in Year 1 at 2–3%
+        commission per policy, with 10% monthly growth.
+      </p>
+
+      <div class="fin-grid reveal">
+        <div class="fin-card fin-year">
+          <h3>Year 1 · FY 2025–26</h3>
+          <div class="fin-label">Revenue</div>
+          <div class="fin-val">₹2.80L</div>
+          <div class="fin-label">Total COGS</div>
+          <div class="fin-val">₹1.32L</div>
+          <div class="fin-label">Net Profit / (Loss)</div>
+          <div class="fin-val loss">(₹1.22L)</div>
+        </div>
+        <div class="fin-card fin-year" style="background: #2a1810">
+          <h3>Year 2 · FY 2026–27</h3>
+          <div class="fin-label">Revenue</div>
+          <div class="fin-val">₹7.32L</div>
+          <div class="fin-label">Total COGS</div>
+          <div class="fin-val">₹2.52L</div>
+          <div class="fin-label">Net Profit</div>
+          <div class="fin-val profit">₹23K</div>
+        </div>
+        <div class="fin-card fin-break">
+          <h3>Break-Even Month</h3>
+          <div class="big-num">6</div>
+          <p>
+            Year 3 Revenue<br /><strong>₹16.2L</strong> · Net Profit
+            <strong>₹3.56L</strong>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIABILITY -->
+    <div class="viability-banner">
+      <h2>Venture Viability Index</h2>
+      <div class="viability-score">91.11%</div>
+      <p>
+        Strong problem-market fit, well-defined target segment, scalable tech,
+        and a mission-aligned team. Key next step: deeper market validation and
+        partnership development.
+      </p>
+    </div>
+
+    <!-- TEAM -->
+    <section class="team" id="team">
+      <div class="section-label">The Team</div>
+      <div class="section-title">Built by Passionate<br />Problem Solvers</div>
+      <p class="section-sub">
+        Three Computer Science students from RGUKT RK Valley, united by a
+        mission to empower rural farmers through technology.
+      </p>
+      <div class="team-grid reveal">
+        <div class="team-card">
+          <div class="avatar">P</div>
+          <h3>Pavan</h3>
+          <div class="team-role">Project Lead</div>
+          <span class="team-skill">Leadership</span>
+        </div>
+        <div class="team-card">
+          <div class="avatar" style="background: var(--orange)">U</div>
+          <h3>Uday Bhaskar</h3>
+          <div class="team-role">Development Lead</div>
+          <span class="team-skill">Team Collaboration</span>
+        </div>
+        <div class="team-card">
+          <div class="avatar" style="background: var(--mid)">A</div>
+          <h3>Abhiram</h3>
+          <div class="team-role">Business Lead</div>
+          <span class="team-skill">Time Management</span>
+        </div>
+      </div>
+      <p
+        style="
+          margin-top: 2rem;
+          color: #6b4a3a;
+          font-size: 0.9rem;
+          text-align: center;
+        "
+      >
+        Mentored by <strong>Abraham Sir</strong> (Faculty Mentor) · Seeking
+        mentors in product dev, tech strategy, market validation, partnerships &
+        funding
+      </p>
+    </section>
+
+    <!-- ROADMAP -->
+    <section id="roadmap" style="background: #fff">
+      <div class="section-label">Roadmap</div>
+      <div class="section-title">12-Month Plan</div>
+      <div class="roadmap-grid reveal">
+        <div class="roadmap-item">
+          <div class="roadmap-dot dot-1">1</div>
+          <div class="roadmap-period">Months 1–3</div>
+          <h3>Research & Build</h3>
+          <p>
+            User research, validate problem, build MVP with core insurance flow
+          </p>
+          <span class="roadmap-budget">₹5L Budget</span>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-dot dot-2">2</div>
+          <div class="roadmap-period">Months 4–6</div>
+          <h3>Test & Onboard</h3>
+          <p>
+            Test MVP with real farmers, onboard first users, refine based on
+            feedback
+          </p>
+          <span class="roadmap-budget">₹7L Budget</span>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-dot dot-3">3</div>
+          <div class="roadmap-period">Months 7–9</div>
+          <h3>Scale & Expand</h3>
+          <p>
+            Scale user base, improve features, expand geographic reach within AP
+            & Telangana
+          </p>
+          <span class="roadmap-budget">₹10L Budget</span>
+        </div>
+        <div class="roadmap-item">
+          <div class="roadmap-dot dot-4">4</div>
+          <div class="roadmap-period">Months 10–12</div>
+          <h3>Launch & Fund</h3>
+          <p>
+            Full product launch, scale adoption across districts, secure Series
+            A funding
+          </p>
+          <span class="roadmap-budget">₹15L Budget</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+      <div class="section-label" style="color: var(--red-light)">
+        Get Involved
+      </div>
+      <div class="section-title">Partner, Invest, or<br />Connect With Us</div>
+      <p class="section-sub">
+        Whether you're a farmer cooperative, investor, NGO, or government agency
+        — we'd love to hear from you.
+      </p>
+      <form class="contact-form" id="contactForm">
+        <input type="text" placeholder="Your Name" required id="fname" />
+        <input type="email" placeholder="Email Address" required id="femail" />
+        <input type="text" placeholder="Organisation / Role" id="forg" />
+        <textarea
+          placeholder="Tell us about your interest — partnership, investment, or just a hello!"
+          id="fmsg"
+        ></textarea>
+        <button type="submit">Send Message →</button>
+      </form>
+    </section>
+
+    <footer>
+      <p>
+        © 2025 <span>Deliverminds</span> · RGUKT RK Valley, Idupulapaya, Kadapa
+        · Wadhwani Foundation Program
+      </p>
+      <p style="margin-top: 0.4rem">
+        Mission: Reduce financial vulnerability among small farmers through
+        reliable crop insurance
+      </p>
+    </footer>
+
+    <div class="toast" id="toast">
+      ✅ Message sent! We'll get back to you soon.
+    </div>
+
+    <script>
+      // Scroll reveal
+      const reveals = document.querySelectorAll(".reveal");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+              setTimeout(() => e.target.classList.add("in"), i * 80);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      reveals.forEach((r) => observer.observe(r));
+
+      // Contact form
+      document.getElementById("contactForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3500);
+        e.target.reset();
+      });
+
+      // Smooth nav highlight
+      const sections = document.querySelectorAll("section[id]");
+      const navLinks = document.querySelectorAll(".nav-links a");
+      window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach((s) => {
+          if (window.scrollY >= s.offsetTop - 100) current = s.id;
+        });
+        navLinks.forEach((a) => {
+          a.style.color =
+            a.getAttribute("href") === "#" + current ? "var(--red)" : "";
+        });
+      });
+    </script>
+  </body>
+</html>
